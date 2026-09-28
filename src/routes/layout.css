@@ -1,2 +1,18 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
+@theme {
+	--font-sans: 'Avenir Next', Avenir, 'Segoe UI', sans-serif;
+}
+
+:root {
+	color: #e9e3df;
+	background: #090909;
+}
+
+body {
+	min-width: 320px;
+	background:
+		radial-gradient(ellipse 36rem 28rem at 92% 12%, rgb(255 122 48 / 13%), transparent 70%),
+		radial-gradient(ellipse 30rem 28rem at 2% 85%, rgb(255 122 48 / 7%), transparent 70%), #090909;
+}
