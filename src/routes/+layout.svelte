@@ -1,6 +1,6 @@
 <script lang="ts">
 	import './layout.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import logo from '$lib/assets/ad-logo.png';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/stores';
 	import { SvelteMap } from 'svelte/reactivity';
@@ -178,7 +178,7 @@
 	}
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head><link rel="icon" type="image/png" href={logo} /></svelte:head>
 
 <div class="min-h-screen font-sans text-white selection:bg-orange-500 selection:text-black">
 	<header class="sticky top-0 z-50 rounded-2xl px-3 pt-3 backdrop-blur-xs sm:px-5 sm:pt-5">
@@ -193,24 +193,11 @@
 					class="group flex shrink-0 items-center gap-3 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
 					aria-label="Cooldown Room home"
 				>
-					<span
-						class="flex h-10 w-10 items-center justify-center rounded-full border border-orange-300/30 bg-orange-500/15 text-orange-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] transition-colors group-hover:bg-orange-500/25"
-						aria-hidden="true"
-					>
-						<svg
-							class="h-5 w-5"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<path d="M4 16a8 8 0 1 1 16 0" />
-							<path d="m12 16 4-6" />
-							<circle cx="12" cy="16" r="1" fill="currentColor" stroke="none" />
-						</svg>
-					</span>
+					<img
+						src={logo}
+						alt=""
+						class="h-10 w-10 shrink-0 rounded-xl border border-white/10 object-contain shadow-[0_0_20px_rgba(255,122,48,0.15)] transition-transform group-hover:scale-105"
+					/>
 					<span class="text-lg font-black tracking-tight whitespace-nowrap sm:text-xl">
 						Cooldown<span class="text-orange-400"> Room</span>
 					</span>
