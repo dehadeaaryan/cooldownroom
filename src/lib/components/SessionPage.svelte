@@ -82,10 +82,11 @@
 						type="button"
 						onclick={() => (selectedIndex = selectedIndex === index ? null : index)}
 						aria-expanded={selectedIndex === index}
-						class="group relative flex w-full min-w-0 items-center gap-4 overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-4 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-orange-400/40 hover:bg-white/[0.09] hover:shadow-[0_18px_40px_rgba(0,0,0,0.22)] focus-visible:outline-2 focus-visible:outline-orange-400 sm:gap-5 sm:p-5"
+						style="--team-color: #{driver.team_colour.replace(/^#/, '')}"
+						class="group relative flex w-full min-w-0 items-center gap-4 overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-4 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[color:var(--team-color)] hover:bg-white/[0.09] hover:shadow-[0_18px_40px_rgba(0,0,0,0.22)] focus-visible:outline-2 focus-visible:outline-orange-400 sm:gap-5 sm:p-5"
 					>
 						<span
-							class="absolute top-0 bottom-0 left-0 w-1 bg-orange-400/80 transition-all group-hover:w-1.5"
+							class="absolute top-0 bottom-0 left-0 w-1 bg-[color:var(--team-color)] transition-all group-hover:w-1.5"
 						></span>
 						<span
 							class="w-12 shrink-0 text-center text-2xl font-black tracking-tight text-orange-400 sm:w-14 sm:text-3xl"
