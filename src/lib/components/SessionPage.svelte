@@ -18,7 +18,6 @@
 	<title
 		>{session ? `${session.country_name} ${session.session_name}` : 'Cooldown Room'} | Cooldown Room</title
 	>
-	<meta name="description" content="Explore Formula 1 drivers and session positions." />
 </svelte:head>
 
 <main class="relative isolate mx-auto max-w-7xl px-4 pt-12 pb-24 sm:px-6 sm:pt-16 lg:pt-20">

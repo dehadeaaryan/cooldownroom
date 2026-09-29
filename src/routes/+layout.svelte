@@ -178,7 +178,23 @@
 	}
 </script>
 
-<svelte:head><link rel="icon" type="image/png" href={logo} /></svelte:head>
+<svelte:head>
+	<title>Cooldown Room — Formula 1 Session Explorer</title>
+	<meta name="description" content="Explore Formula 1 session results, driver positions, and performance across races and seasons." />
+	<link rel="canonical" href={$page.url.origin + $page.url.pathname} />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.origin + $page.url.pathname} />
+	<meta property="og:title" content="Cooldown Room — Formula 1 Session Explorer" />
+	<meta property="og:description" content="Explore Formula 1 session results, driver positions, and performance across races and seasons." />
+	<meta property="og:image" content={$page.url.origin + '/og-preview.png'} />
+	<meta property="og:image:width" content="1734" />
+	<meta property="og:image:height" content="907" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:url" content={$page.url.origin + $page.url.pathname} />
+	<meta name="twitter:title" content="Cooldown Room — Formula 1 Session Explorer" />
+	<meta name="twitter:description" content="Explore Formula 1 session results, driver positions, and performance across races and seasons." />
+	<meta name="twitter:image" content={$page.url.origin + '/og-preview.png'} />
+</svelte:head>
 
 <div class="min-h-screen font-sans text-white selection:bg-orange-500 selection:text-black">
 	<header class="sticky top-0 z-50 rounded-2xl px-3 pt-3 backdrop-blur-xs sm:px-5 sm:pt-5">
