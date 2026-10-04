@@ -1,5 +1,10 @@
 import type { PageServerLoad } from './$types';
-import { fetchDriverStandings, fetchSessions } from '$lib/server/openf1';
+import {
+	fetchDriverStandings,
+	fetchSessions,
+	isExpectedOpenF1Error,
+	sessionErrorMessage
+} from '$lib/server/openf1';
 
 const sessionMap: Record<string, string> = {
 	fp1: 'Practice 1',
@@ -37,10 +42,10 @@ export const load: PageServerLoad = ({ params, fetch }) => ({
 				...(await fetchDriverStandings(fetch, matchedSession.session_key))
 			};
 		} catch (error) {
-			if (!String(error).includes('rate limit')) {
+			if (!isExpectedOpenF1Error(error)) {
 				console.error('Could not load the selected OpenF1 session:', error);
 			}
-			return { session: null, drivers: [], error: 'Session data is temporarily unavailable.' };
+			return { session: null, drivers: [], error: sessionErrorMessage(error) };
 		}
 	})()
 });

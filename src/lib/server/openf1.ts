@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/private';
 import type {
 	Driver,
 	PositionRecord,
@@ -12,6 +13,23 @@ const cache = new Map<string, { value: unknown[]; expiresAt: number }>();
 const pending = new Map<string, Promise<unknown[]>>();
 const unavailableGrids = new Map<number, number>();
 let blockedUntil = 0;
+let authBlockedUntil = 0;
+let rejectedToken: string | undefined;
+export class OpenF1AuthenticationError extends Error {
+	constructor() {
+		super('OpenF1 live data requires authentication. Please try again after the session ends.');
+	}
+}
+
+export function isExpectedOpenF1Error(error: unknown): boolean {
+	return error instanceof OpenF1AuthenticationError || String(error).includes('rate limit');
+}
+
+export function sessionErrorMessage(error: unknown): string {
+	return error instanceof OpenF1AuthenticationError
+		? error.message
+		: 'Session data is temporarily unavailable.';
+}
 let nextRequestAt = 0;
 let requestSlots = Promise.resolve();
 
@@ -36,6 +54,12 @@ function retryDelay(header: string | null): number {
 async function fetchArray<T>(fetcher: Fetch, path: string): Promise<T[]> {
 	const existing = cache.get(path);
 	if (existing && existing.expiresAt > Date.now()) return existing.value as T[];
+	const token = env.OPENF1_API_TOKEN;
+	const authBlocked = () => Date.now() < authBlockedUntil && token === rejectedToken;
+	if (authBlocked()) {
+		if (existing) return existing.value as T[];
+		throw new OpenF1AuthenticationError();
+	}
 	if (Date.now() < blockedUntil) {
 		if (existing) return existing.value as T[];
 		throw new Error('OpenF1 rate limit is active');
@@ -46,11 +70,23 @@ async function fetchArray<T>(fetcher: Fetch, path: string): Promise<T[]> {
 
 	const request = (async () => {
 		await waitForRequestSlot();
+		if (authBlocked()) {
+			if (existing) return existing.value as T[];
+			throw new OpenF1AuthenticationError();
+		}
 		if (Date.now() < blockedUntil) {
 			if (existing) return existing.value as T[];
 			throw new Error('OpenF1 rate limit is active');
 		}
-		const response = await fetcher(`https://api.openf1.org/v1/${path}`);
+		const response = await fetcher(`https://api.openf1.org/v1/${path}`, {
+			headers: token ? { Authorization: `Bearer ${token}` } : {}
+		});
+		if (response.status === 401 || response.status === 403) {
+			rejectedToken = token;
+			authBlockedUntil = Date.now() + 5 * 60_000;
+			if (existing) return existing.value as T[];
+			throw new OpenF1AuthenticationError();
+		}
 		if (response.status === 429) {
 			blockedUntil = Math.max(
 				blockedUntil,
@@ -82,6 +118,20 @@ async function fetchArray<T>(fetcher: Fetch, path: string): Promise<T[]> {
 
 export async function fetchSessions(fetcher: Fetch, query: string): Promise<Session[]> {
 	return fetchArray<Session>(fetcher, `sessions?${query}`);
+}
+
+export async function fetchLatestAvailableSession(fetcher: Fetch): Promise<Session | null> {
+	// OpenF1 keeps a session behind live authentication until 30 minutes after it ends.
+	const cutoff = Date.now() - 30 * 60_000;
+	const year = new Date().getUTCFullYear();
+	for (let season = year; season >= 2023; season--) {
+		const sessions = await fetchSessions(fetcher, `year=${season}`);
+		const latest = sessions
+			.filter((session) => Date.parse(session.date_end) <= cutoff)
+			.sort((a, b) => Date.parse(b.date_start) - Date.parse(a.date_start))[0];
+		if (latest) return latest;
+	}
+	return null;
 }
 
 export async function fetchStartingPosition(
@@ -124,12 +174,15 @@ export async function fetchDriverStandings(fetcher: Fetch, sessionKey: number) {
 	]);
 
 	if (driverResponse.status === 'rejected') {
-		if (!String(driverResponse.reason).includes('rate limit')) {
+		if (!isExpectedOpenF1Error(driverResponse.reason)) {
 			console.error('Could not load OpenF1 drivers:', driverResponse.reason);
 		}
 		return {
 			drivers: [] as RankedDriver[],
-			error: 'Driver data is temporarily unavailable. Please try again shortly.'
+			error:
+				driverResponse.reason instanceof OpenF1AuthenticationError
+					? driverResponse.reason.message
+					: 'Driver data is temporarily unavailable. Please try again shortly.'
 		};
 	}
 
@@ -144,7 +197,7 @@ export async function fetchDriverStandings(fetcher: Fetch, sessionKey: number) {
 				.filter((result) => Number.isFinite(result.position) && result.position! > 0)
 				.map((result) => [result.driver_number, result.position!] as const)
 		);
-	} else if (!String(resultResponse.reason).includes('rate limit')) {
+	} else if (!isExpectedOpenF1Error(resultResponse.reason)) {
 		console.error('Could not load OpenF1 session results:', resultResponse.reason);
 	}
 
@@ -161,8 +214,7 @@ export async function fetchDriverStandings(fetcher: Fetch, sessionKey: number) {
 				}
 			}
 		} catch (error) {
-			if (!String(error).includes('rate limit'))
-				console.error('Could not load OpenF1 positions:', error);
+			if (!isExpectedOpenF1Error(error)) console.error('Could not load OpenF1 positions:', error);
 		}
 	}
 

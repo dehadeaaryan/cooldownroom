@@ -18,6 +18,7 @@ export interface Session {
 	country_name: string;
 	location: string;
 	date_start: string;
+	date_end: string;
 	gmt_offset: string;
 }
 

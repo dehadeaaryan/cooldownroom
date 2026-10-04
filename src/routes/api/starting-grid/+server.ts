@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { fetchStartingPosition } from '$lib/server/openf1';
+import { fetchStartingPosition, isExpectedOpenF1Error } from '$lib/server/openf1';
 
 export const GET: RequestHandler = async ({ url, fetch }) => {
 	const sessionKey = Number(url.searchParams.get('session_key'));
@@ -20,7 +20,7 @@ export const GET: RequestHandler = async ({ url, fetch }) => {
 	try {
 		return json(await fetchStartingPosition(fetch, sessionKey, driverNumber, dateStart));
 	} catch (error) {
-		if (!String(error).includes('rate limit')) {
+		if (!isExpectedOpenF1Error(error)) {
 			console.error('Could not load OpenF1 starting grid:', error);
 		}
 		return json({ error: 'Starting grid is temporarily unavailable.' }, { status: 503 });

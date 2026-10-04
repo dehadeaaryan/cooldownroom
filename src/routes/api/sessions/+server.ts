@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { fetchSessions } from '$lib/server/openf1';
+import { fetchSessions, isExpectedOpenF1Error, sessionErrorMessage } from '$lib/server/openf1';
 
 export const GET: RequestHandler = async ({ url, fetch }) => {
 	const year = Number(url.searchParams.get('year'));
@@ -22,11 +22,7 @@ export const GET: RequestHandler = async ({ url, fetch }) => {
 			)
 		});
 	} catch (error) {
-		if (!String(error).includes('rate limit'))
-			console.error('Could not load OpenF1 sessions:', error);
-		return json(
-			{ error: 'Sessions are temporarily unavailable. Please try again shortly.' },
-			{ status: 503 }
-		);
+		if (!isExpectedOpenF1Error(error)) console.error('Could not load OpenF1 sessions:', error);
+		return json({ error: sessionErrorMessage(error) }, { status: 503 });
 	}
 };

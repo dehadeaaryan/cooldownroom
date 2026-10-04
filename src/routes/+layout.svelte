@@ -225,7 +225,7 @@
 							<div class="hidden h-9 w-px shrink-0 bg-white/15 md:block"></div>
 							<div class="hidden min-w-0 md:block">
 								<p class="text-[10px] font-bold tracking-[0.18em] text-orange-400 uppercase">
-									{$page.url.pathname === '/' ? 'Latest session' : 'Viewing session'}
+									{$page.url.pathname === '/' ? 'Latest available session' : 'Viewing session'}
 								</p>
 								<p class="truncate text-sm font-semibold text-neutral-100">
 									{result.session.country_name}
