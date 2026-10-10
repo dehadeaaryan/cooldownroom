@@ -186,14 +186,16 @@
 	<meta property="og:url" content={$page.url.origin + $page.url.pathname} />
 	<meta property="og:title" content="Cooldown Room — Formula 1 Session Explorer" />
 	<meta property="og:description" content="Explore Formula 1 session results, driver positions, and performance across races and seasons." />
-	<meta property="og:image" content={$page.url.origin + '/og-preview.png'} />
-	<meta property="og:image:width" content="1734" />
-	<meta property="og:image:height" content="907" />
+	<meta property="og:image" content={$page.url.origin + '/og-preview.png?v=2'} />
+	<meta property="og:image:type" content="image/png" />
+	<meta property="og:image:alt" content="Cooldown Room — Formula 1 Sessions" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:url" content={$page.url.origin + $page.url.pathname} />
 	<meta name="twitter:title" content="Cooldown Room — Formula 1 Session Explorer" />
 	<meta name="twitter:description" content="Explore Formula 1 session results, driver positions, and performance across races and seasons." />
-	<meta name="twitter:image" content={$page.url.origin + '/og-preview.png'} />
+	<meta name="twitter:image" content={$page.url.origin + '/og-preview.png?v=2'} />
 </svelte:head>
 
 <div class="min-h-screen font-sans text-white selection:bg-orange-500 selection:text-black">

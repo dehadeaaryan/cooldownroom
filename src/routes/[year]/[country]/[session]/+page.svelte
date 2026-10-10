@@ -5,7 +5,7 @@
 </script>
 
 {#await data.result}
-	<LoadingPage label="Loading session" />
+	<LoadingPage />
 {:then result}
-	<SessionPage {...result} eyebrow="From the archive" />
+	<SessionPage {...result} />
 {/await}

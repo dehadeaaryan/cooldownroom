@@ -5,7 +5,7 @@
 </script>
 
 {#await data.result}
-	<LoadingPage label="Latest on track" />
+	<LoadingPage />
 {:then result}
-	<SessionPage {...result} eyebrow="Latest on track" />
+	<SessionPage {...result} />
 {/await}

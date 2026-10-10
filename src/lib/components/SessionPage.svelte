@@ -3,11 +3,10 @@
 	import { resultLabel } from '$lib/resultLabel';
 	import type { RankedDriver, Session } from '$lib/types';
 
-	let { session, drivers, error, eyebrow } = $props<{
+	let { session, drivers, error } = $props<{
 		session: Session | null;
 		drivers: RankedDriver[];
 		error: string;
-		eyebrow: string;
 	}>();
 
 	let selectedIndex = $state<number | null>(null);
@@ -26,13 +25,6 @@
 	></div>
 	<section class="mb-10 grid gap-8 lg:mb-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
 		<div class="max-w-3xl">
-			<p
-				class="mb-4 flex items-center gap-2 text-xs font-extrabold tracking-[0.22em] text-orange-400 uppercase"
-			>
-				<span class="h-2 w-2 rounded-full bg-orange-400 shadow-[0_0_15px_rgba(255,122,48,0.7)]"
-				></span>
-				{eyebrow}
-			</p>
 			<h1
 				class="text-5xl leading-[0.98] font-black tracking-[-0.055em] text-[#e9e3df] sm:text-6xl lg:text-7xl"
 			>
@@ -44,7 +36,7 @@
 			</h1>
 			<p class="mt-4 text-base text-neutral-400 sm:text-lg">
 				{session
-					? `${session.session_name} · Explore the drivers and their positions.`
+					? session.session_name
 					: 'Choose a season and session above to explore the drivers.'}
 			</p>
 		</div>
@@ -70,10 +62,6 @@
 	{/if}
 
 	{#if drivers.length > 0}
-		<div class="mb-5 flex items-center justify-between border-b border-white/10 pb-3">
-			<p class="text-xs font-extrabold tracking-[0.2em] text-neutral-400 uppercase">The lineup</p>
-			<p class="text-xs text-neutral-500">Select a driver for details</p>
-		</div>
 		<div class="grid grid-cols-1 items-start gap-4 md:grid-cols-2 md:gap-x-8 md:gap-y-5">
 			{#each drivers as driver, index (driver.driver_number)}
 				<div class="min-w-0 md:even:mt-8">
