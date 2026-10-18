@@ -214,7 +214,7 @@
 					<img
 						src={logo}
 						alt=""
-						class="h-10 w-10 shrink-0 rounded-xl border border-white/10 object-contain shadow-[0_0_20px_rgba(255,122,48,0.15)] transition-transform group-hover:scale-105"
+						class="h-8 w-[46px] shrink-0 object-contain drop-shadow-[0_0_8px_rgba(0,234,255,0.25)] transition group-hover:scale-105 group-hover:drop-shadow-[0_0_11px_rgba(0,234,255,0.45)]"
 					/>
 					<span class="text-lg font-black tracking-tight whitespace-nowrap sm:text-xl">
 						Cooldown<span class="text-orange-400"> Room</span>
